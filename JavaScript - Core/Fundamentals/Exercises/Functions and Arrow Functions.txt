@@ -1,0 +1,282 @@
+--01. Inside Volume--
+
+function coordinates(numbers){
+
+    for (var i = 0; i < numbers.length; i+=3) {
+        let x = numbers[i]
+        let y = numbers[i + 1]
+        let z = numbers[i + 2]
+        if ((x >= 10 && x <= 50) && (y >= 20 && y <= 80) && (z >= 15 && z <= 50)){
+            console.log("inside")
+        }
+        else{
+            console.log("outside")
+        }
+    }
+}
+
+--02. Road Radar--
+
+function roadRadar(input){
+    let speed = input[0];
+    let area = input[1];
+
+    switch (area){
+        case "residential": speedChecker(speed, 20)
+            break
+        case "city" : speedChecker(speed, 50)
+            break
+        case "interstate": speedChecker(speed, 90)
+            break
+        case "motorway": speedChecker(speed, 130)
+            break
+    }
+    function speedChecker(speed, limit){
+        let difference = speed - limit
+        if (difference < 0){
+            return
+        }
+        else if (difference > 0 && difference <= 20) {
+            console.log("speeding")
+        }
+        else if (difference > 20 && difference <= 40){
+            console.log("excessive speeding")
+        }
+        else if (difference > 40){
+            console.log("reckless driving")
+        }
+    }
+}
+
+--03. Template Format--
+
+function questionsAndAnswers(input){
+    console.log("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+    console.log("<quiz>")
+    for (let i = 0; i < input.length; i+=2) {
+        console.log("<question>")
+        console.log(input[i])
+        console.log("</question>")
+        console.log("<answer>")
+        console.log(input[i+1])
+        console.log("</answer>")
+    }
+    console.log("</quiz>")
+}
+
+--04. Cooking by Numbers--
+
+function cookingByNumbers(input){
+    let number = input[0]
+    let operations = {
+        chop: (number) => number / 2,
+        dice: (number) => Math.sqrt(number),
+        spice: (number) => ++number,
+        bake: (number) => number * 3,
+        fillet: (number) => number * 0.8,
+    }
+    for (let i = 1; i < input.length; i++) {
+        let obj = input[i];
+        number = operations[obj](number)
+        console.log(number)
+    }
+}
+
+--05. Modify Average--
+
+function modifyAverage(input) {
+    while (true){
+        let avgNumber = average(input)
+        if (avgNumber > 5){
+            break
+        }
+        function average(number) {
+            return String(number).split('').map(Number).reduce((a, b) => a + b) / String(number).length;
+        }
+        input += '9'
+    }
+    console.log(input)
+}
+
+--06. Validity Checker--
+
+function validPoints(input) {
+    let x1 = input[0]
+    let y1 = input[1]
+    let x2 = input[2]
+    let y2 = input[3]
+    validityChecker(x1, y1, 0, 0)
+    validityChecker(x2, y2, 0, 0)
+    validityChecker(x1, y1, x2, y2)
+    function validityChecker(numX1, numY1, numX2, numY2) {
+        let distance = Math.sqrt((Math.pow(Math.abs(numX1 - numX2), 2) + Math.pow(Math.abs(numY1 - numY2), 2)))
+        let checker = String(distance).includes('.')
+        if (checker){
+            console.log(`{${numX1}, ${numY1}} to {${numX2}, ${numY2}} is invalid`)
+        }
+        else{
+            console.log(`{${numX1}, ${numY1}} to {${numX2}, ${numY2}} is valid`)
+        }
+    }
+}
+
+--07. Treasure Locator--
+
+function treasureLocator(input) {
+    let tuvalu = {
+        x1: 1, y1: 1, x2: 3, y2: 3, name: 'Tuvalu'
+    }
+    let tokelau = {
+        x1: 8, y1: 0, x2: 9, y2: 1, name: 'Tokelau'
+    }
+    let samoa = {
+        x1: 5, y1: 3, x2: 7, y2: 6, name: 'Samoa'
+    }
+    let tonga = {
+        x1: 0, y1: 6, x2: 2, y2: 8, name: 'Tonga'
+    }
+    let cook = {
+        x1: 4, y1: 7, x2: 9, y2: 8, name: 'Cook'
+    }
+    let array = [tuvalu, tokelau, samoa, tonga, cook]
+    let result = []
+    for (let i = 0; i < input.length; i += 2) {
+        if(array.some(x => input[i] >= x.x1 && input[i] <= x.x2 && input[i+1] >= x.y1 && input[i+1] <= x.y2)){
+            let obj = array.find(x => input[i] >= x.x1 && input[i] <= x.x2 && input[i+1] >= x.y1 && input[i+1] <= x.y2)
+            result.push(obj.name)
+        }
+        else{
+            result.push('On the bottom of the ocean')
+        }
+    }
+    for (let obj of result) {
+        console.log(obj)
+    }
+}
+
+--08. Trip Length--
+
+function tripLength(input) {
+    let point1 = {
+        x: input[0], y: input[1], distance: 0, position: 1, positionNext: 2, positionLast: 3
+    }
+    let point2 = {
+        x: input[2], y: input[3], distance: 0, position: 2, positionNext: 1, positionLast: 3
+    }
+    let point3 = {
+        x: input[4], y: input[5], distance: 0, position: 3, positionNext: 1, positionLast: 2
+    }
+    let distance1to2 =  Math.sqrt((Math.pow(Math.abs(point1.x - point2.x), 2) + Math.pow(Math.abs(point1.y - point2.y), 2)))
+    let distance1to3 = Math.sqrt((Math.pow(Math.abs(point1.x - point3.x), 2) + Math.pow(Math.abs(point1.y - point3.y), 2)))
+    let distance2to3 = Math.sqrt((Math.pow(Math.abs(point3.x - point2.x), 2) + Math.pow(Math.abs(point3.y - point2.y), 2)))
+    if(distance1to3 < distance1to2) {
+        point1.positionNext = 3
+        point1.positionLast = 2
+    }
+    if(distance2to3 < distance1to2){
+        point2.positionNext = 3
+        point2.positionLast = 1
+    }
+    if(distance2to3 < distance1to3){
+        point3.positionNext = 2
+        point3.positionLast = 1
+    }
+    point1.distance = Math.min((distance1to2 + distance2to3), (distance1to3 + distance2to3))
+    point2.distance = Math.min((distance1to2 + distance1to3), (distance1to3 + distance2to3))
+    point3.distance = Math.min((distance1to2 + distance1to3), (distance1to2 + distance2to3))
+    let shortestDistance = Math.min(point1.distance, point2.distance, point3.distance)
+    let array = [point1, point2, point3]
+    array = array.filter(x => x.distance == shortestDistance)
+    if(array.length > 1){
+        array.sort((x, y) => x.position - y.position)
+        let result = array[0]
+        console.log(`${result.position}->${result.positionNext}->${result.positionLast}: ${result.distance}`)
+    }
+    else{
+        console.log(`${array[0].position}->${array[0].positionNext}->${array[0].positionLast}: ${array[0].distance}`)
+    }
+
+}
+
+--09.* Radio Crystals--
+
+function radioCrystal(input) {
+    let cut = {cut: (x) => x / 4, counter: 0, name: 'Cut'}
+    let lap = {lap: (x) => x * 0.8, counter: 0, name: 'Lap'}
+    let grind = {grind: (x) => x - 20, counter: 0, name: 'Grind'}
+    let etch = {etch: (x) => x - 2, counter: 0, name: 'Etch'}
+    let xRay = {xRay: (x) => x + 1, counter: 0, name: 'X-ray'}
+    for (let i = 1; i < input.length; i++) {
+        let currentThickness = input[i]
+        let targetThickness = input[0]
+        console.log(`Processing chunk ${currentThickness} microns`)
+        while(currentThickness / 4 >= targetThickness - 1){
+            currentThickness = Math.floor(cut.cut(currentThickness))
+            cut.counter++
+        }
+        print(cut)
+        while(currentThickness * 0.8 >= targetThickness - 1){
+            currentThickness = Math.floor(lap.lap(currentThickness))
+            lap.counter++
+        }
+        print(lap)
+        while(currentThickness - 20 >= targetThickness - 1){
+            currentThickness = grind.grind(currentThickness)
+            grind.counter++
+        }
+        print(grind)
+        while(currentThickness - 2 >= targetThickness - 1){
+            currentThickness = etch.etch(currentThickness)
+            etch.counter++
+        }
+        print(etch)
+        if(currentThickness === targetThickness - 1){
+            currentThickness = xRay.xRay(currentThickness)
+            console.log(`X-ray x1`)
+            console.log(`Finished crystal ${currentThickness} microns`)
+        }
+        else{
+            console.log(`Finished crystal ${currentThickness} microns`)
+        }
+        function print(operation){
+            if(operation.counter > 0){
+                console.log(`${operation.name} x${operation.counter}`)
+                console.log('Transporting and washing')
+            }
+        }
+    }
+}
+
+--10. DNA Helix--
+
+function radioCrystal(input) {
+    let counter = 1
+    let at = {first: 'A', second: `T`}
+    let cg = {first: 'C', second: `G`}
+    let tt = {first: 'T', second: `T`}
+    let ag = {first: 'A', second: `G`}
+    let gg = {first: 'G', second: `G`}
+    let array = [at, cg, tt, ag, gg]
+    let index = 0
+    for (let i = 1; i <= input; i++) {
+
+        if(counter === 1){
+            console.log(`**${array[index].first}${array[index].second}**`)
+        }
+        if(counter === 2){
+            console.log(`*${array[index].first}--${array[index].second}*`)
+        }
+        if(counter === 3){
+            console.log(`${array[index].first}----${array[index].second}`)
+        }
+        if(counter === 4){
+            counter = 0
+            console.log(`*${array[index].first}--${array[index].second}*`)
+        }
+        counter++
+        index++
+        if(index === 5){
+            index = 0
+        }
+    }
+}

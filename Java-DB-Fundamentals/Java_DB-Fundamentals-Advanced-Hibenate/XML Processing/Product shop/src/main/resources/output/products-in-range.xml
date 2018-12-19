@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<products>
+    <product name="Parsley" price="519.06" seller="Gary Stevens"/>
+    <product name="TERSI" price="554.91" seller="Bennett"/>
+    <product name="PLANTAGO LANCEOLATA POLLEN" price="561.68" seller="Lawson"/>
+    <product name="Agaricus Equisetum Special Order" price="585.93" seller="Brandon Fuller"/>
+    <product name="Diastat" price="614.14" seller="Nicole Martinez"/>
+    <product name="Glipizide" price="621.78" seller="Sandra Riley"/>
+    <product name="Pollens - Weeds and Garden Plants, Nettle Urtica dioica" price="782.77" seller="Jennifer Riley"/>
+    <product name="Naproxen" price="807.22" seller="Kathy Gilbert"/>
+    <product name="Azithromycin" price="813.87" seller="Thomas Snyder"/>
+    <product name="Perrigo Benzoyl Peroxide" price="873.24" seller="Anna Clark"/>
+    <product name="Levothyroxine Sodium" price="885.86" seller="Marie Williamson"/>
+    <product name="EPZICOM" price="895.65" seller="Eugene Stewart"/>
+    <product name="Myristica Argentum Sinus Relief" price="904.52" seller="Mitchell"/>
+    <product name="Ranitidine" price="926.64" seller="Fred Barnes"/>
+    <product name="Care One Hemorrhoidal" price="932.18" seller="Thompson"/>
+    <product name="NEO-POLY-BAC HYDRO" price="967.32" seller="Schmidt"/>
+</products>

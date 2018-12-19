@@ -1,0 +1,181 @@
+--01. Print Array with Given Delimiter--
+
+function printArray(input) {
+    let delimiter = input[input.length - 1]
+    input.pop();
+    console.log(input.join(`${delimiter}`));
+}
+
+--02. Print every N-th Element from an Array--
+
+function printArray(input) {
+    let n = Number(input[input.length - 1])
+    for (let i = 0; i < input.length - 1; i+=n) {
+        console.log(input[i])
+    }
+}
+
+--03. Add and Remove Elements--
+
+function printArray(input) {
+    let array = []
+    for (let i = 0; i < input.length; i++) {
+        if(input[i] === 'add'){
+            array.push(i + 1)
+        }
+        else{
+            array.pop()
+        }
+    }
+    if(array.length > 0){
+        array.forEach(x => console.log(x))
+    }
+    else{
+        console.log('Empty')
+    }
+}
+
+--04. Rotate Array--
+
+function printArray(input) {
+    let rotations = Number(input[input.length - 1])
+    input.pop()
+    rotations %= input.length
+    let temp = input.splice(input.length - rotations)
+    input = temp.concat(input)
+    console.log(input.join(' '))
+}
+
+--05. Extract Increasing Subsequence from Array--
+
+function printArray(input) {
+    let result = [input[0]]
+    let maxNum = input[0]
+    for (let i = 1; i < input.length; i++) {
+        if(input[i] >= maxNum){
+            result.push(input[i])
+            maxNum = input[i]
+        }
+    }
+    console.log(result.join('\n'))
+}
+
+--06. Sort Array--
+
+function printArray(input) {
+    console.log(input.sort((a, b) => a.localeCompare(b)).sort((a, b) => a.length - b.length).join('\n'))
+}
+
+--07. Magic Matrices--
+
+function printArray(input) {
+    let sum = input[0].reduce((a,b) => a + b)
+    if(input.some(x => x.reduce((a,b) => a + b) !== sum)){
+        return console.log('false')
+    }
+    for (let i = 0; i < input.length; i++) {
+        let num = 0;
+        for (let j = 0; j < input.length; j++) {
+            if (input[j][i] !== undefined)
+                num += input[j][i]
+        }
+        if(num !== sum){
+            return console.log('false')
+        }
+    }
+    console.log('true')
+}
+
+--08. Spiral Matrix--
+
+function spiralMatrix(row, col) {
+    let array = [];
+    let currentNumber = 1;
+    let indexRow = 0;
+    let indexCol = 0;
+    let boundary = 0;
+    for (let i = 0; i < row; i++) {
+        array.push('0'.repeat(col).split(""))
+    }
+    while (currentNumber <= row * col) {
+        for (let i = indexCol; i < col - boundary; i++) {
+            addCurrentNumber(indexRow, i);
+            indexCol = i;
+        }
+        for (let i = indexRow + 1; i < row - boundary; i++) {
+            addCurrentNumber(i, indexCol);
+            indexRow = i;
+        }
+        for (let i = indexCol - 1; i >= boundary; i--) {
+            addCurrentNumber(indexRow, i);
+            indexCol = i;
+        }
+        for (let i = indexRow - 1; i > boundary; i--) {
+            addCurrentNumber(i, indexCol);
+            indexRow = i;
+        }
+        boundary++;
+    }
+    function addCurrentNumber (row, col){
+        if (array[row][col] === '0') {
+            array[row][col] = currentNumber++;
+        }
+    }
+    array.forEach(x => console.log(x.join(' ')));
+}
+
+--09. Diagonal Attack--
+
+function printArray(input) {
+    input = input.map(x => x.split(' ').map(Number))
+    let sumDiagonalOne = 0
+    let sumDiagonalTwo = 0
+    for (let i = 0; i < input.length; i++) {
+        sumDiagonalOne += input[i][i]
+    }
+    let temp = 0;
+    for (let i = input.length - 1; i >= 0; i--) {
+            sumDiagonalTwo += input[temp][i]
+        temp++
+    }
+    if(sumDiagonalOne === sumDiagonalTwo){
+        for (let i = 0; i < input.length; i++) {
+            for (let j = 0; j < input[i].length; j++) {
+                if(i === j || i + j === input[i].length - 1){
+                    continue
+                }
+                input[i][j] = sumDiagonalTwo
+            }
+        }
+    }
+    input.forEach(x => console.log(x.join(' ')))
+}
+
+--10. Orbit--
+
+function orbit([rows, cols, startRow, startCol]) {
+    let matrix = [];
+    let queue = [];
+    for (let i = 0; i < rows; i++) {
+        matrix.push('0'.repeat(cols).split(""))
+    }
+    matrix[startRow][startCol] = 1;
+    queue.push([startRow, startCol, 1]);
+    while (queue.length !== 0){
+        let currentCell = queue.shift();
+        checkSurroundingCells(currentCell);
+    }
+    function checkSurroundingCells(currentCell) {
+        for (let i = currentCell[0] - 1; i < currentCell[0] + 2; i++) {
+            for (let j = currentCell[1] - 1; j < currentCell[1] + 2; j++) {
+                try{
+                    if (matrix[i][j] === '0') {
+                        matrix[i][j] = currentCell[2] + 1;
+                        queue.push([i, j, matrix[i][j]]);
+                    }
+                }catch (err) {}
+            }
+        }
+    }
+    matrix.forEach(x => console.log(x.join(' ')));
+}

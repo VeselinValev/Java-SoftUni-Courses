@@ -1,0 +1,199 @@
+--1.
+
+(function solution() {
+   Array.prototype.last = function () {
+       return this[this.length - 1];
+   };
+
+    Array.prototype.skip = function (n) {
+        return this.slice(n);
+    };
+
+    Array.prototype.take = function (n) {
+        return this.slice(0, n);
+    };
+
+    Array.prototype.sum = function () {
+        return this.reduce((a,b) => a + b);
+    };
+
+    Array.prototype.average = function () {
+        return this.reduce((a,b) => a + b) / this.length;
+    };
+
+})();
+
+--2.
+
+function solution(input) {
+    if (input.handsShaking === true){
+        input.bloodAlcoholLevel += input.weight * input.experience * 0.1;
+        input.handsShaking = false;
+    }
+    return input;
+}
+
+--3.
+
+function solution(input) {
+    let engines = {
+        "Small engine": {power: 90, volume: 1800},
+        "Normal engine": {power: 120, volume: 2400},
+        "Monster engine": {power: 200, volume: 3500}
+    };
+
+    let carriages = {
+        "hatchback": { type: 'hatchback', color: input.color },
+        "coupe": { type: 'coupe', color: input.color }
+    };
+    let wheelSize = input.wheelsize % 2 !== 0 ? input.wheelsize : input.wheelsize - 1;
+    let wheels = [wheelSize, wheelSize, wheelSize, wheelSize]
+    let engine = {};
+    if (input.power <= engines["Small engine"].power){
+        engine = engines["Small engine"];
+    }else if (input.power <= engines["Normal engine"].power){
+        engine = engines["Normal engine"];
+    }else{
+        engine = engines["Monster engine"];
+    }
+    return {
+        model: input.model,
+        engine: engine,
+        carriage: carriages[input.carriage],
+        wheels: wheels
+    };
+}
+
+--4.
+
+function solution(input) {
+    let myObj = {};
+
+    myObj.extend = function (source) {
+        for (let prop in source) {
+            if (typeof source[prop] === 'function') {
+                Object.getPrototypeOf(myObj)[prop] = source[prop]
+            } else {
+                myObj[prop] = source[prop]
+            }
+        }
+    };
+    return myObj;
+}
+
+--5.
+
+(function() {
+    String.prototype.ensureStart = function (str) {
+        if (!this.startsWith(str)) {
+            return str + this.toString();
+        }else{
+            return this.toString();
+        }
+    };
+
+    String.prototype.ensureEnd = function (str) {
+        if (!this.endsWith(str)) {
+            return this.toString() + str;
+        }else{
+            return this.toString();
+        }
+    };
+
+    String.prototype.isEmpty = function () {
+        return this.length === 0;
+    };
+
+    String.prototype.truncate = function (n) {
+        let truncatedString = "";
+        if (this.length <= n) {
+            truncatedString = this.toString();
+        } else {
+            if (this.includes(" ")) {
+                let words = this.split(" ");
+                for (let i = 0; i < words.length; i++) {
+                    if (truncatedString.length + words[i].length + 1 < n) {
+                        truncatedString += " " + words[i];
+                    } else {
+                        truncatedString += "...";
+                        break;
+                    }
+                }
+            } else {
+                if (n < 4) {
+                    for (let i = 0; i < n; i++) {
+                        truncatedString += ".";
+                    }
+                } else {
+                    truncatedString = this.substr(0, n - 3);
+                    truncatedString += "..."
+                }
+            }
+        }
+        return truncatedString.trim();
+    };
+
+    String.format = function (string, ...params) {
+        let regex = /{\d}/;
+        let counter = 0;
+        let match;
+        while ((match = regex.exec(string)) !== null){
+            if (params[counter] === undefined){
+                break;
+            }
+            string = string.replace(match[0], params[counter])
+            counter++;
+        }
+        return string
+    };
+})();
+
+--6.
+
+function generateLinkedList() {
+    return (function () {
+        let storage = [];
+
+        function getSize() {
+            return storage.length;
+        }
+
+        function add(element) {
+            storage.push(element);
+            reSort();
+        }
+
+        function remove(index) {
+            if (isValidIndex(index)) {
+                storage.splice(index, 1);
+                reSort();
+            } else {
+                throw new Error;
+            }
+        }
+
+        function reSort() {
+            storage = storage.sort((a, b) => a - b);
+        }
+
+        function isValidIndex(index) {
+            return index >= 0 && index < storage.length;
+
+        }
+
+        function get(index) {
+            if (isValidIndex(index)) {
+                return storage[index];
+            } else {
+                throw new Error;
+            }
+        }
+
+        let a = {add, remove, get};
+        a.__defineGetter__("size", getSize);
+        return a;
+    })();
+}
+
+--7. 
+

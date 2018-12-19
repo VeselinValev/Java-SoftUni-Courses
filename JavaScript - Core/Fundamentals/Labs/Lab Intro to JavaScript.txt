@@ -1,0 +1,96 @@
+--1. Sum 3 Numbers--
+
+function sumNumbers(num1, num2, num3){
+    console.log(num1 + num2 + num3);
+}
+
+--2. Calculate Sum and VAT--
+
+function vatAndSum(numbers) {
+    let sum = 0;
+    for (var i = 0; i < numbers.length; i++) {
+        sum += numbers[i];
+    }
+    let vat = sum * 0.2
+    let total = vat + sum
+    console.log("sum = " + sum)
+    console.log("VAT = " + vat)
+    console.log("total = " + total)
+}
+
+--3. Letter Occurences In String--
+
+function letterCounter(string1, string2) {
+    let counter = 0;
+    for (var i = 0; i < string1.length; i++) {
+        if (string1[i] === string2){
+            counter++;
+        }
+    }
+    console.log(counter)
+}
+
+--4. Filter By Age--
+
+function minimumAge(minAge, namePerson1, agePerson1, namePerson2, agePerson2) {
+    let person1 = {
+        name: namePerson1,
+        age: agePerson1
+    }
+    let person2 = {
+        name: namePerson2,
+        age: agePerson2
+    }
+    if (person1.age >= minAge){
+        console.log(person1)
+    }
+    if (person2.age >= minAge){
+        console.log(person2)
+    }
+}
+
+--5. String of Numbers 1..N--
+
+function minimumAge(number) {
+    let result =''
+    for (let i = 1; i <= number; i++) {
+        result += i
+    }
+    return result
+}
+
+--6. Figure Area--
+
+function squareOfRectangles(w, h, W, H) {
+    let reult = 0
+    let smallerWidth = Math.min(w, W)
+    let smallerHeight = Math.min(h, H)
+    result = (w * h) + (W *H) - (smallerHeight * smallerWidth)
+    return result
+}
+
+--7. Next Day--
+
+function nextDay(year, month, day) {
+    let date = new Date(year, month-1, day)
+    let oneDay = 24 * 60 * 60 * 1000
+    let nextDate = new Date(date.getTime() + oneDay)
+    return nextDate.getFullYear() + '-' + (nextDate.getMonth() + 1) +'-' + nextDate.getDate()
+}
+
+--8. Distance between Points--
+
+function distance(x1, y1, x2, y2) {
+    let point1 = {
+        x: x1,
+        y: y1
+    }
+    let point2 = {
+        x: x2,
+        y: y2
+    }
+    let xLine = Math.abs(point1.x - point2.x)
+    let yLine = Math.abs(point1.y - point2.y)
+    let distance = Math.sqrt((Math.pow(xLine, 2) + Math.pow(yLine, 2)))
+    console.log(distance)
+}

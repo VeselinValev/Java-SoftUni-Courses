@@ -1,0 +1,189 @@
+--01. Heroic Inventory--
+
+function problem(input){
+    let result = []
+    for (let i = 0; i < input.length; i++) {
+        let splitInput = input[i].split(/\s*\/\s*/).filter(a => a !== '')
+        let currentObject = {
+            name: splitInput[0],
+            level: Number(splitInput[1]),
+            items: []
+        }
+        if (splitInput.length > 2){
+            currentObject.items = splitInput[2].split(', ').filter(a => a !== '')
+        }
+        result.push(currentObject)
+    }
+    console.log(JSON.stringify(result))
+}
+
+--02. JSON's Table--
+
+function problem(input){
+    let result = '<table>\n'
+    for (let i = 0; i < input.length; i++) {
+        let currentObject = JSON.parse(input[i])
+        result += '\t<tr>\n'
+        result += `\t\t<td>` + escapeHtml(currentObject.name) + `</td>\n`
+        result += `\t\t<td>` + escapeHtml(currentObject.position) + `</td>\n`
+        result += `\t\t<td>` + currentObject.salary + `</td>\n`
+        result += '\t<tr>\n'
+    }
+    result += '</table>'
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+    console.log(result)
+}
+
+--03. Cappy Juice--
+
+function problem(input){
+    let objectList = []
+    let count = 1;
+    for (let i = 0; i < input.length; i++) {
+        let [name, amount] = input[i].split(/\s*=>\s*/).filter(a => a !== '')
+        let currentObject = {
+            position: 100000,
+            amount: 0
+        }
+        if(objectList.some(a => a.name === name)){
+           currentObject = objectList.find(a => a.name === name)
+            currentObject.amount += Number(amount)
+            if(currentObject.amount >= 1000 && currentObject.position === 100000){
+                currentObject.position = count;
+                count++;
+            }
+        }
+        else{
+            if(amount >= 1000){
+                currentObject.position = count;
+                count++;
+            }
+            currentObject.name = name
+            currentObject.amount = Number(amount)
+            objectList.push(currentObject)
+        }
+    }
+    for (let i = 0; i < objectList.length; i++) {
+        objectList[i].bottles = Math.floor(objectList[i].amount / 1000)
+    }
+    objectList = objectList.filter(a => a.bottles !== 0)
+    objectList = objectList.sort((a,b) => a.position - b.position)
+    objectList.forEach(a => console.log(`${a.name} => ${a.bottles}`))
+}
+
+--04. Store Catalogue--
+
+function problem(input){
+    let result = new Map()
+    for (let i = 0; i < input.length; i++) {
+        let [name, price] = input[i].split(' : ').filter(a => a!== '')
+        let letter = name[0]
+        let innerMap = new Map()
+        innerMap.set(name, price)
+        if(!result.has(letter)) {
+            result.set(letter, innerMap)
+        }
+        else{
+            result.get(letter).set(name, price)
+        }
+    }
+    let sorted = Array.from(result.keys()).sort()
+    for (let key of sorted) {
+        console.log(key)
+        let sortedMap = Array.from(result.get(key)).sort()
+        for (let [name, price] of sortedMap) {
+            console.log(`  ${name}: ${price}`)
+        }
+    }
+}
+
+--05. Auto-Engineering Company--
+
+function problem(input){
+    let cars = new Map()
+    for (let i = 0; i < input.length; i++) {
+        let [carName, carModel, quantity] = input[i].split(' | ').filter(a => a !== '')
+        quantity = Number(quantity)
+        if(!cars.has(carName)){
+            cars.set(carName, new Map())
+            cars.get(carName).set(carModel, quantity)
+        }
+        else{
+            if(!cars.get(carName).get(carModel)){
+                cars.get(carName).set(carModel, quantity)
+            }
+            else{
+                cars.get(carName).set(carModel, cars.get(carName).get(carModel) + quantity)
+            }
+        }
+    }
+    for (let [key, value] of cars) {
+        console.log(key)
+        for (let [model, quantity] of value) {
+            console.log(`###${model} -> ${quantity}`)
+        }
+    }
+}
+
+--06. System Components --
+
+function problem(input){
+    let systems = new Map()
+    for (let i = 0; i < input.length; i++) {
+        let [system, component, subComponent] = input[i].split(' | ').filter(a => a !== '')
+        if(!systems.has(system)){
+            systems.set(system, new Map())
+        }
+        if(!systems.get(system).get(component)){
+            systems.get(system).set(component, [])
+        }
+        systems.get(system).get(component).push(subComponent)
+    }
+    let sortedSystems = Array.from(systems.keys()).sort().sort((a,b) => systems.get(b).size - systems.get(a).size)
+
+    for (let key of sortedSystems) {
+        console.log(key)
+        let sortedComponents = Array.from(systems.get(key).keys()).sort((a,b) => systems.get(key).get(b).length - systems.get(key).get(a).length)
+        for (let item of sortedComponents) {
+            console.log(`|||${s=item}`)
+            for (let subComponent of systems.get(key).get(item)) {
+                console.log(`||||||${subComponent}`)
+            }
+        }
+    }
+}
+
+--07. Usernames--
+
+function problem(input) {
+    let names = []
+    for (let i = 0; i < input.length; i++) {
+        if(!names.includes(input[i])){
+            names.push(input[i])
+        }
+    }
+    names = names.sort((a, b) => a.length - b.length || a.localeCompare(b))
+    names.forEach(a => console.log(a))
+}
+
+--08. Unique Sequences--
+
+function problem(input) {
+    let arrays = new Map()
+    for (let i = 0; i < input.length; i++) {
+        let currentArray = JSON.parse(input[i]).map(Number).sort((a,b) => b - a)
+        let toAdd = currentArray.join(', ')
+        if(!arrays.has(toAdd)){
+            arrays.set(toAdd, currentArray.length)
+        }
+    }
+    let result = Array.from(arrays.keys()).sort((a,b) => arrays.get(a) - arrays.get(b))
+    result.forEach(a => console.log(`[${a}]`))
+}

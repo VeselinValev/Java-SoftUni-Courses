@@ -1,0 +1,454 @@
+--2.	Get Villains’ Names--
+
+public static void main(String[] args) throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            connection = DriverManager.getConnection(url, props);
+            String retrieveData = "SELECT v.name, COUNT(mv.villain_id) AS number_of_minions FROM villains AS v, minions_villains AS mv\n" +
+                    "WHERE v.id = mv.villain_id\n" +
+                    "GROUP BY v.id\n" +
+                    "HAVING number_of_minions > 3\n" +
+                    "ORDER BY number_of_minions DESC;";
+            stmt = connection.prepareStatement(retrieveData);
+            rs = stmt.executeQuery();
+
+            while (rs.next()){
+                System.out.printf("%s %s%n", rs.getString("name"), rs.getInt("number_of_minions"));
+            }
+
+
+        }catch (SQLException sqlEx){
+            sqlEx.printStackTrace();
+        }finally{
+            if(stmt != null){
+                stmt.close();
+            }
+            if (connection != null){
+                connection.close();
+            }
+        }
+
+    }
+
+--3.	Get Minion Names--
+
+public static void main(String[] args) throws SQLException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmtMinions = null;
+        PreparedStatement stmtVillain = null;
+        ResultSet rsMinions = null;
+        ResultSet rsVillain = null;
+
+        int villainId = Integer.parseInt(reader.readLine());
+
+        try {
+            connection = DriverManager.getConnection(url, props);
+            stmtMinions = connection.prepareStatement("SELECT m.name, m.age FROM minions AS m\n" +
+                    "JOIN minions_villains AS mv\n" +
+                    "ON mv.minions_id = m.id\n" +
+                    "WHERE mv.villain_id = ?\n" +
+                    "ORDER BY m.age;");
+            stmtMinions.setInt(1, villainId);
+
+            stmtVillain = connection.prepareStatement("SELECT name FROM villains AS v\n" +
+                    "WHERE v.id = ?");
+            stmtVillain.setInt(1, villainId);
+            rsMinions = stmtMinions.executeQuery();
+            rsVillain = stmtVillain.executeQuery();
+
+            if (!rsVillain.first()){
+                System.out.printf("No villain with ID %s exists in the database.", villainId);
+            }else{
+                System.out.printf("Villain: %s%n", rsVillain.getString("name"));
+                if (!rsMinions.first()){
+                    System.out.println("<no minions>");
+                }else{
+                    int counter = 1;
+                    while (rsMinions.next()){
+                        System.out.printf("%s. %s %s%n", counter++, rsMinions.getString("name"), rsMinions.getInt("age"));
+                    }
+                }
+            }
+
+        }catch (SQLException sqlEx){
+            sqlEx.printStackTrace();
+        }finally{
+            if(stmtMinions != null){
+                stmtMinions.close();
+            }
+            if(stmtVillain != null){
+                stmtVillain.close();
+            }
+            if (connection != null){
+                connection.close();
+            }
+        }
+
+    }
+
+--4.	Add Minion--
+
+public static void main(String[] args) throws SQLException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        String minionTokens = reader.readLine();
+        String villainTokens = reader.readLine();
+        String townName = minionTokens.split(" ")[3];
+        String minionName = minionTokens.split(" ")[1];
+        int minionAge = Integer.parseInt(minionTokens.split(" ")[2]);
+        String villainName = villainTokens.split(" ")[1];
+
+        try {
+            connection = DriverManager.getConnection(url, props);
+
+            stmt = connection.prepareStatement("SELECT t.name FROM towns AS t WHERE t.name = ?");
+            stmt.setString(1, townName);
+            rs = stmt.executeQuery();
+
+            if (!rs.first()) {
+                stmt = connection.prepareStatement("INSERT INTO towns(name) VALUES (?)");
+                stmt.setString(1, townName);
+                stmt.executeUpdate();
+                System.out.printf("Town %s was added to the database.%n", townName);
+            }
+
+            stmt = connection.prepareStatement("INSERT INTO minions(name, town_id, age) VALUES (?, (SELECT t.id FROM towns AS t WHERE t.name = ? LIMIT 1), ?)");
+            stmt.setString(1, minionName);
+            stmt.setString(2, townName);
+            stmt.setInt(3, minionAge);
+            stmt.executeUpdate();
+
+            stmt = connection.prepareStatement("SELECT v.name FROM villains AS v WHERE v.name = ?");
+            stmt.setString(1, villainName);
+            rs = stmt.executeQuery();
+            if (!rs.first()) {
+                stmt = connection.prepareStatement("INSERT INTO villains(name) VALUES (?)");
+                stmt.setString(1, villainName);
+                stmt.executeUpdate();
+                System.out.printf("Villain %s was added to the database.%n", villainName);
+
+            }
+            stmt = connection.prepareStatement("INSERT INTO minions_villains(minions_id, villain_id) VALUES " +
+                    "((SELECT m.id FROM minions AS m WHERE m.name = ? LIMIT 1), (SELECT v.id FROM villains AS v WHERE v.name = ? LIMIT 1))");
+            stmt.setString(1, minionName);
+            stmt.setString(2, villainName);
+            stmt.executeUpdate();
+            System.out.printf("Successfully added %s to be minion of %s.%n", minionName, villainName);
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+    }
+
+--5.	Change Town Names Casing--
+
+public static void main(String[] args) throws SQLException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        String countryName = reader.readLine();
+        List<String> townNamesToCapitalize = new ArrayList<>();
+
+        try {
+            connection = DriverManager.getConnection(url, props);
+
+            stmt = connection.prepareStatement("SELECT t.name FROM towns AS t WHERE t.country = ?");
+            stmt.setString(1, countryName);
+            rs = stmt.executeQuery();
+
+            while (rs.next()){
+                String currentTownName = rs.getString("name");
+                if (!currentTownName.chars().allMatch(Character::isUpperCase)){
+                    townNamesToCapitalize.add(currentTownName);
+                }
+            }
+            if (townNamesToCapitalize.isEmpty()){
+                System.out.println("No town names were affected.");
+            }else{
+                for (String town : townNamesToCapitalize) {
+                    String capitalizedTownName = town.toUpperCase();
+                    stmt = connection.prepareStatement("UPDATE towns SET name = ? WHERE name = ?");
+                    stmt.setString(1, capitalizedTownName);
+                    stmt.setString(2, town);
+                    stmt.executeUpdate();
+                }
+                System.out.printf("%s town names were affected.%n", townNamesToCapitalize.size());
+                System.out.println(townNamesToCapitalize.stream().map(String::toUpperCase).collect(Collectors.toList()).toString());
+            }
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+    }
+
+--6.	*Remove Villain--
+
+public static void main(String[] args) throws SQLException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        int villainId = Integer.parseInt(reader.readLine());
+
+        try {
+            connection = DriverManager.getConnection(url, props);
+
+            stmt = connection.prepareStatement("SELECT v.name FROM villains AS v WHERE v.id = ?");
+            stmt.setInt(1, villainId);
+            rs = stmt.executeQuery();
+            String villainName = "";
+            if (rs.first()){
+                villainName = rs.getString("name");
+                stmt = connection.prepareStatement("DELETE FROM villains WHERE name = ?");
+                stmt.setString(1, villainName);
+                stmt.executeUpdate();
+                System.out.println(villainName + " was deleted");
+
+                stmt = connection.prepareStatement("SELECT COUNT(minions_id) AS minions_released FROM minions_villains WHERE villain_id = ?");
+                stmt.setInt(1, villainId);
+                rs = stmt.executeQuery();
+                int minionsReleased = 0;
+                if (rs.first()){
+                    minionsReleased = rs.getInt("minions_released");
+                    stmt = connection.prepareStatement("DELETE FROM minions_villains WHERE villain_id = ?");
+                    stmt.setInt(1, villainId);
+                    stmt.executeUpdate();
+                }
+                System.out.println(minionsReleased + " minions released");
+            }else{
+                System.out.println("No such villain was found");
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+    }
+
+--7.	Print All Minion Names--
+
+public static void main(String[] args) throws SQLException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> minionNames = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection(url, props);
+
+            stmt = connection.prepareStatement("SELECT name FROM minions ORDER BY id");
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                minionNames.add(rs.getString("name"));
+            }
+            for (int i = 0; i < minionNames.size() / 2; i++){
+                System.out.println(minionNames.get(i));
+                System.out.println(minionNames.get(minionNames.size() - i - 1));
+            }
+            if (minionNames.size() % 2 != 0){
+                System.out.println(minionNames.get(minionNames.size() / 2));
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+    }
+
+--8.	Increase Minions Age--
+
+public static void main(String[] args) throws SQLException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        int[] minionIds = Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        List<Integer> age = new ArrayList<>();
+        List<String> minionNames = new ArrayList<>();
+        try {
+            connection = DriverManager.getConnection(url, props);
+           for (int i = 0; i < minionIds.length; i++){
+               stmt = connection.prepareStatement("UPDATE minions AS m SET m.age = m.age + 1 WHERE m.id = ?");
+               stmt.setInt(1, minionIds[i]);
+               stmt.executeUpdate();
+               stmt = connection.prepareStatement("UPDATE minions AS m SET m.name = CONCAT(UCASE(LEFT(m.name, 1)), SUBSTRING(m.name, 2)) WHERE m.id = ?");
+               stmt.setInt(1, minionIds[i]);
+               stmt.executeUpdate();
+           }
+
+            stmt = connection.prepareStatement("SELECT name, age FROM minions");
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                System.out.printf("%s %s%n", rs.getString("name"), rs.getInt("age"));
+            }
+
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+    }
+
+--9.	Increase Age Stored Procedure--
+
+public static void main(String[] args) throws SQLException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String url = "jdbc:mysql://localhost:3306/minionsdb";
+        String user = "root";
+        String password = "";
+
+        Properties props = new Properties();
+        props.setProperty("user", user);
+        props.setProperty("password", password);
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        int minionId = Integer.parseInt(reader.readLine());
+        try {
+            connection = DriverManager.getConnection(url, props);
+            stmt = connection.prepareStatement("CALL usp_get_older(?)");
+            stmt.setInt(1, minionId);
+            stmt.executeUpdate();
+
+            stmt = connection.prepareStatement("SELECT m.name, m.age FROM minions AS m WHERE m.id = ?");
+            stmt.setInt(1, minionId);
+            rs = stmt.executeQuery();
+            if (rs.first()){
+                System.out.printf("%s %s%n", rs.getString("name"), rs.getInt("age"));
+            }
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            if (rs != null){
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+    }

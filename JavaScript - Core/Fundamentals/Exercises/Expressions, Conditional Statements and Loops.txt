@@ -1,0 +1,291 @@
+--01. Hello JavaScript!--
+
+function problem1(input) {
+    console.log('Hello, %s, I am JavaScript!', input)
+}
+
+--02. Area and Perimeter--
+
+function problem1(sideA, sideB) {
+    console.log(sideA * sideB);
+    console.log((sideA + sideB) * 2);
+}
+
+--03. Distance over Time--
+
+function problem1(input) {
+    console.log(Math.abs(( input[2] / 3600 ) * input[0] - ( input[2] / 3600 ) * input[1]) * 1000);
+}
+
+--04. Distance in 3D--
+
+function problem1(input) {
+    console.log(Math.sqrt(Math.pow((input[0] - input[3]), 2) + Math.pow((input[1] - input[4]), 2) + Math.pow((input[2] - input[5]), 2)));
+}
+
+--05. Grads to Radians--
+
+function problem1(input) {
+    console.log((((input * 0.9) % 360) + 360) % 360);
+}
+
+--06. Compound Interest--
+
+function problem1(input) {
+    let principal = input[0];
+    let interest = input[1] / 100;
+    let frequency = 12 / input[2];
+    let length = input[3];
+    console.log((principal * Math.pow((1 + interest / frequency), (length * frequency))).toFixed(2));
+}
+
+--07. Rounding--
+
+function problem1(input) {
+    if (input[1] > 15){
+        input[1] = 15;
+    }
+    console.log(parseFloat(input[0].toFixed(input[1])));
+}
+
+--08. Imperial Units--
+
+function problem1(input) {
+    console.log("%s'-%s\"", Math.floor(input / 12), input % 12);
+}
+
+--09. Now Playing--
+
+function orbit(input) {
+    console.log("Now Playing: %s - %s [%s]", input[1], input[0], input[2])
+}
+
+--10. Compose Tag--
+
+function orbit(input) {
+    console.log("<img src=\"%s\" alt=\"%s\">", input[0], input[1])
+}
+
+--11. Binary to Decimal--
+
+function orbit(input) {
+    console.log(parseInt(input, 2))
+}
+
+--12. Assign Properties--
+
+function orbit([propertyOne, valueOne, propertyTwo, valueTwo, propertyThree, valueThree]) {
+    console.log({[propertyOne] : valueOne, [propertyTwo] : valueTwo, [propertyThree] : valueThree});
+}
+
+--13. Last Month--
+
+function orbit([day, month, year]) {
+    var date = new Date();
+    date.setMonth(month - 1);
+    date.setFullYear(year);
+    date.setDate(0);
+    console.log(date.getDate());;
+}
+
+--14. Biggest of 3 Numbers--
+
+function orbit(input) {
+    console.log(Math.max(input[0], input[2], input[1]));
+}
+
+--15. Point in Rectangle--
+
+function orbit([x, y, xMin, xMax, yMin, yMax]) {
+    if (x < xMin || x > xMax || y < yMin || y > yMax){
+        console.log("outside");
+    }else{
+        console.log("inside");
+    }
+}
+
+--16. Odd Numbers 1 to N--
+
+function orbit(n) {
+    for (let i = 1; i <= n; i+=2) {
+        console.log(i)
+    }
+}
+
+--17. Triangle of Dollars--
+
+function orbit(n) {
+    for (let i = 1; i <= n; i++) {
+        console.log('$'.repeat(i));
+    }
+}
+
+--18. Movie Prices--
+
+function orbit([movie, day]) {
+    let table = {
+        "the godfather" : {
+            "monday" : "12", "tuesday" : "10", "wednesday" : "15", "thursday" : "12.5", "friday" : "15", "saturday" : "25", "sunday" : "30"
+        },
+        "schindler's list" : {
+            "monday" : "8.50", "tuesday" : "8.50", "wednesday" : "8.50", "thursday" : "8.50", "friday" : "8.50", "saturday" : "15", "sunday" : "15"
+        },
+        "casablanca" : {
+            "monday" : "8", "tuesday" : "8", "wednesday" : "8", "thursday" : "8", "friday" : "8", "saturday" : "10", "sunday" : "10"
+        },
+        "the wizard of oz" : {
+            "monday" : "10", "tuesday" : "10", "wednesday" : "10", "thursday" : "10", "friday" : "10", "saturday" : "15", "sunday" : "15"
+            }
+    };
+    if (table[movie.toLowerCase()] === undefined || table[movie.toLowerCase()][day.toLowerCase()] === undefined){
+        console.log("error")
+    }else{
+        console.log(table[movie.toLowerCase()][day.toLowerCase()])
+    }
+}
+
+--19. Quadratic Equation--
+
+function solve(a, b, c) {
+    let root1 = (-1 * b + Math.sqrt(Math.pow(b, 2) - (4 * a * c))) / (2 * a);
+    let root2 = (-1 * b - Math.sqrt(Math.pow(b, 2) - (4 * a * c))) / (2 * a);
+    if (root1 === root2){
+        console.log(root1)
+    }else{
+        if (isNaN(root1)){
+            console.log("no")
+        }else{
+            console.log(Math.min(root1, root2));
+            console.log(Math.max(root1, root2));
+        }
+    }
+}
+
+--20. Multiplication Table--
+
+function solve(n) {
+    let result = "<table border=\"1\">\n<tr><th>x";
+    for (let i = 1; i <= n; i++) {
+        result += "</th><th>" + i;
+    }
+    result += "</th></tr>\n";
+    for (let i = 1; i <= n; i++) {
+        result += "<tr><th>" + (i);
+        for (let j = 1; j <= n; j++) {
+            if (j === 1){
+                result += "</th><td>" + (j * i);
+            }else{
+                result += "</td><td>" + (j * i);
+            }
+        }
+        result += "</td></tr>\n"
+    }
+    result += "</table>";
+    console.log(result)
+}
+
+--21. Figure of 4 Squares--
+
+function solve(n) {
+    let numberOfLines = Math.floor(n / 2 - 1);
+    if (n % 2 === 0){
+        numberOfLines--;
+    }
+    console.log("+" + "-".repeat(n - 2) + "+" + "-".repeat(n - 2) + "+");
+    for (let i = 0; i < numberOfLines; i++) {
+        console.log("|" + " ".repeat(n - 2) + "|" + " ".repeat(n - 2) + "|");;
+    }
+    if (n > 2){
+        console.log("+" + "-".repeat(n - 2) + "+" + "-".repeat(n - 2) + "+");
+        for (let i = 0; i < numberOfLines; i++) {
+            console.log("|" + " ".repeat(n - 2) + "|" + " ".repeat(n - 2) + "|");
+        }
+        console.log("+" + "-".repeat(n - 2) + "+" + "-".repeat(n - 2) + "+");
+    }
+}
+
+--22. Monthly Calendar--
+
+function solve([day, month, year]) {
+    let date = new Date();
+    date.setFullYear(year);
+    date.setMonth(month - 1);
+    date.setDate(1);
+    let firstDayOfTheMonth = date.getDay();
+    date.setDate(0);
+    let lastDayOfPrevMonth = date.getDate();
+    let result = "<table>\n<tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>\n";
+    if (firstDayOfTheMonth > 0){
+        for (let i = 0; i < firstDayOfTheMonth; i++) {
+            if (i === 0){
+                result += "<tr><td class=\"prev-month\">" + (lastDayOfPrevMonth - firstDayOfTheMonth + 1);
+            }else{
+                result += "</td><td class=\"prev-month\">" + (lastDayOfPrevMonth - firstDayOfTheMonth + i + 1);
+            }
+        }
+    }
+    let currentMonthDayCounter = 1;
+    let sunday = 0;
+    for (let i = 1; i <= 7 - firstDayOfTheMonth; i++) {
+        if (firstDayOfTheMonth === sunday--){
+            if (currentMonthDayCounter === day) {
+                result += "<tr><td class=\"today\">" + i;
+            }else{
+                result += "<tr><td>" + i;
+            }
+        }else{
+            if (currentMonthDayCounter === day){
+                result += "</td><td class=\"today\">" + i;
+            }else{
+                result += "</td><td>" + i;
+            }
+        }
+        currentMonthDayCounter++;
+    }
+    result += "</td></tr>\n";
+    let date2 = new Date();
+    date2.setFullYear(year);
+    date2.setMonth(month);
+    date2.setDate(0);
+    let lastDayOfTheMonth = date2.getDate();
+    while (true){
+        for (let i = 0; i < 7; i++) {
+            if (i === 0) {
+                if (currentMonthDayCounter === day){
+                    result += "<tr><td class=\"today\">" + currentMonthDayCounter++;
+                }else{
+                    result += "<tr><td>" + currentMonthDayCounter++;
+                }
+            } else {
+                if (currentMonthDayCounter === day){
+                    result += "</td><td class=\"today\">" + currentMonthDayCounter++;
+                }else{
+                    result += "</td><td>" + currentMonthDayCounter++;
+                }
+            }
+            if (currentMonthDayCounter > lastDayOfTheMonth){
+                break;
+            }
+        }
+        if (currentMonthDayCounter > lastDayOfTheMonth){
+            break;
+        }
+        result += "</td></tr>\n";
+    }
+    let date3 = new Date();
+    date3.setFullYear(year);
+    date3.setMonth(month - 1);
+    date3.setDate(lastDayOfTheMonth);
+    let lastDayOfTheCurrentMonth = date3.getDay();
+    for (let i = 1; i <= 6 - lastDayOfTheCurrentMonth; i++) {
+        result += "</td><td class=\"next-month\">" + i;
+        if (i + lastDayOfTheCurrentMonth === 6){
+            result += "</td></tr>\n";
+        }
+    }
+    if (lastDayOfTheCurrentMonth === 6){
+        result += "</td></tr>\n";
+    }
+    result += "</table>";
+    console.log(result);
+}

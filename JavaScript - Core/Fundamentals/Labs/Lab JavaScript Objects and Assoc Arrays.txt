@@ -1,0 +1,36 @@
+--01. Towns to JSON--
+
+function solve(input) {
+    let towns = [];
+    for (let i = 1; i < input.length; i++) {
+        let tokens = input[i].split("|").filter(x => x !== "").map(x => x.trim());
+        towns.push({ 'Town' : tokens[0], 'Latitude' :  Number(tokens[1]), 'Longitude' : Number(tokens[2])})
+    }
+    console.log(JSON.stringify(towns));
+}
+
+--02. Score to HTML--
+
+function solve(input) {
+    let towns = JSON.parse(input);
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+    let result = "<table>\n";
+    result += "<tr><th>name</th><th>score</th></tr>\n";
+    for (let i = 0; i < towns.length; i++) {
+        result += "<tr><td>" + escapeHtml(towns[i].name) + "</td><td>" + escapeHtml(String(towns[i].score)) + "</td></tr>" + "\n";
+    }
+    result += "</table>";
+
+    console.log(result);
+}
+
+--03. JSON to HTML Table--
+
+

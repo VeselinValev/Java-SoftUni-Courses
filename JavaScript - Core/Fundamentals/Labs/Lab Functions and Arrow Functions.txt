@@ -1,0 +1,84 @@
+--01. Triangle of Stars--
+
+function solve(n) {
+    for (let i = 1; i <= n; i++) {
+        console.log("*".repeat(i));
+    }
+    for (let i = n - 1; i > 0; i--) {
+        console.log("*".repeat(i));
+    }
+}
+
+--02. Square of Stars--
+
+function solve(n) {
+    if (n === undefined){
+        n = 5;
+    }
+    for (let i = 1; i <= n; i++) {
+        console.log("* ".repeat(n));
+    }
+}
+
+--03. Palindrome--
+
+function solve(n) {
+    if (n.substr(0, n.length/2) === n.substr((n.length  + 1)/ 2, n.length).split("").reverse().join("")){
+        console.log(true);
+    }else{
+        console.log(false);
+    }
+
+}
+
+--04. Day of Week--
+
+function solve(n) {
+    switch (n) {
+        case "Monday" : console.log(1); break;
+        case "Tuesday" : console.log(2); break;
+        case "Wednesday" : console.log(3); break;
+        case "Thursday" : console.log(4); break;
+        case "Friday" : console.log(5); break;
+        case "Saturday" : console.log(6); break;
+        case "Sunday" : console.log(7); break;
+        default : console.log("error"); break;
+    }
+}
+
+--05. Functional Calculator--
+
+function solve(value1, value2, operator) {
+    let multiply = (x, y) => x * y;
+    let divide = (x, y) => x / y;
+    let subtract = (x, y) => x - y;
+    let add = (x, y) => x + y;
+
+    switch (operator) {
+        case "*" : console.log(multiply(value1, value2));break;
+        case "/" : console.log(divide(value1, value2));break;
+        case "-" : console.log(subtract(value1, value2));break;
+        case "+" : console.log(add(value1, value2));break;
+    }
+}
+
+--06. Aggregate Elements--
+
+function solve(array) {
+    console.log(array.reduce((a, b) => a + b, 0));
+    console.log(array.map(x => 1 / x).reduce((a, b) => a + b, 0));
+    console.log(array.join(""));
+}
+
+--07. Words Uppercase--
+
+function solve(text) {
+    let pattern = /[\w]+/g;
+    let match = pattern.exec(text);
+    let matches = [];
+    while (match !== null) {
+        matches.push(match[0].toUpperCase());
+        match = pattern.exec(text);
+    }
+    console.log(matches.join(", "))
+}

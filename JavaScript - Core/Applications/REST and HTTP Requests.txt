@@ -1,0 +1,187 @@
+1. Bus Stop --
+
+function getInfo() {
+    let stopId = $("#stopId").val();
+
+    let url = `https://judgetests.firebaseio.com/businfo/${stopId}.json`;
+    $("#buses").empty();
+
+    let request = {
+        url:url,
+        success:displayBusesAndTimes,
+        error:$("#stopName").text("Error")
+    };
+
+    $.ajax(request);
+
+    function displayBusesAndTimes(result) {
+        $("#stopName").text(result.name);
+        let container = $("#buses");
+
+        for (let bus in result['buses']) {
+            container.append(`<li>Bus ${bus} arrives in ${result['buses'][bus]} minutes</li>`)
+        }
+    }
+}
+
+2.	Bus Schedule --
+
+function solve() {
+    let currentId = "depot";
+    let stopName = "depot";
+
+    function depart() {
+        let request = {
+            url:`https://judgetests.firebaseio.com/schedule/${currentId}.json`,
+            success:displayInfo,
+            error:requestError
+        };
+        $.ajax(request);
+    }
+    
+    function requestError() {
+        $("#depart").attr("disabled", true);
+        $("#arrive").attr("disabled", true);
+        $(".info").eq(0).text(`Error`)
+    }
+
+    function displayInfo(result){
+        currentId = result["next"];
+        stopName = result["name"];
+
+        $("#depart").attr("disabled", true);
+        $("#arrive").attr("disabled", false);
+        $(".info").eq(0).text(`Next stop ${stopName}`)
+    }
+
+    function arrive() {
+        $("#depart").attr("disabled", false);
+        $("#arrive").attr("disabled", true);
+        $(".info").eq(0).text(`Arriving at ${stopName}`)
+    }
+
+    return {
+        depart,
+        arrive
+    };
+}
+
+3. *Messenger
+
+function attachEvents() {
+    let url = `https://jsapp-bd1db.firebaseio.com/.json`;
+
+    let submitBtn = $("#submit");
+    let refreshBtn = $("#refresh");
+
+    let authorInput = $("#author");
+    let contentInput = $("#content");
+
+    let messageArea = $("#messages");
+
+    refreshBtn.on("click", function () {
+        $(messageArea).text("");
+
+        let request = {
+            url: url,
+            success: handleSuccess,
+            error: handleError
+        };
+        $.ajax(request);
+        $(authorInput).val("");
+        $(contentInput).val("");
+
+        function handleSuccess(result) {
+            let keys = Object.keys(result);
+            for (const key of keys) {
+                $(messageArea).append(`${result[key].author}: ${result[key].content}\n`)
+            }
+        }
+
+        function handleError() {
+            $(messageArea).append("Error");
+        }
+    });
+
+    submitBtn.on("click", function () {
+        if (authorInput.val() !== "" && contentInput.val() !== "") {
+            let post = {
+                method: "Post",
+                url: url,
+                data: JSON.stringify({author: authorInput.val(), content: contentInput.val(), timestamp: Date.now()})
+            };
+            $.ajax(post);
+            $(messageArea).append(authorInput.val() + ": " + contentInput.val() + "\n");
+        }
+        $(authorInput).val("");
+        $(contentInput).val("");
+        
+    })
+
+}
+
+4.	Phonebook --
+
+function attachEvents() {
+        let url = `https://phonebook-nakov.firebaseio.com/phonebook`;
+
+        let loadBtn = $("#btnLoad");
+        let createBtn = $("#btnCreate");
+
+        let personInput = $("#person");
+        let phoneInput = $("#phone");
+
+        loadBtn.on("click", function () {
+            let phoneBook = $("#phonebook");
+            phoneBook.empty();
+            let getRequest = {
+                url: url + ".json",
+                success: handleSuccess,
+                error: handleError
+            };
+            $.ajax(getRequest);
+            function handleSuccess(result) {
+                let keys = Object.keys(result);
+                console.log(result);
+                for (const key of keys) {
+                    $(phoneBook).append($(`<li>${result[key].person}: ${result[key].phone}</li>`)
+                        .append($('<button>[Delete]</button>').on("click", function () {
+                            let deleteRequest = {
+                                method: "Delete",
+                                url: url + `/${key}.json`,
+                                success: handleSuccess,
+                                error: handleError
+                            };
+                            function handleSuccess(){
+                                $(event.target).parent().remove();
+                            }
+                            function handleError(err) {
+                                console.error(err)
+                            }
+                            $.ajax(deleteRequest);
+
+                        })))
+                }
+            }
+
+            function handleError(err) {
+                console.error(err)
+            }
+            $(personInput).val("");
+            $(phoneInput).val("");
+        });
+
+        createBtn.on("click", function () {
+            if (personInput.val() !== "" && phoneInput.val() !== ""){
+                let postRequest = {
+                    method: "Post",
+                    url: url + ".json",
+                    data:JSON.stringify({person: personInput.val(), phone: phoneInput.val()})
+                };
+                $.ajax(postRequest);
+            }
+            $(personInput).val("");
+            $(phoneInput).val("");
+        });
+
+}

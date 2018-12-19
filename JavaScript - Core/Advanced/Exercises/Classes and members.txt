@@ -1,0 +1,214 @@
+--1.
+
+class Request{
+    constructor(method, uri, version, message) {
+        this.method = method;
+        this.uri = uri;
+        this.version = version;
+        this.message = message;
+        this.response = undefined;
+        this.fulfilled = false;
+    }
+}
+
+--2.
+
+function solve(tickets, sortBy) {
+    class Ticket{
+        constructor(destination, price, status) {
+            this.destination = destination;
+            this.price = +price;
+            this.status = status;
+
+        }
+    }
+
+    let allTickets = [];
+
+    tickets.forEach(x => {
+        let [destination, price, status] = x.split("|");
+        allTickets.push(new Ticket(destination, price, status));
+    });
+    if (sortBy === 'price'){
+        return allTickets.sort((x, y) => x[sortBy] - (y[sortBy]));
+    }else{
+        return allTickets.sort((x, y) => x[sortBy].localeCompare(y[sortBy]));
+    }
+}
+
+--3.
+
+class Rat {
+    constructor(name) {
+        this.name = name;
+        this.unitedRats = [];
+    }
+
+    getRats() {
+        return this.unitedRats;
+    }
+
+    unite(object) {
+        if (object instanceof Rat) {
+            this.unitedRats.push(object);
+        }
+    }
+
+    toString(){
+        let result = this.name;
+        this.unitedRats.forEach(x => result += "\n#" + x.name);
+        return result;
+    }
+}
+
+--4.
+
+class Stringer {
+    constructor(string, length) {
+        this.innerString  = string;
+        this.innerLength = length;
+    }
+
+    increase(length){
+        this.innerLength += length;
+    }
+
+    decrease(length){
+        this.innerLength = Math.max(0, this.innerLength -= length);
+    }
+
+    toString(){
+        if (this.innerLength === 0){
+            return "...";
+        }else if (this.innerLength < this.innerString.length){
+            return this.innerString.substr(0, this.innerLength) + "...";
+        }else{
+            return this.innerString;
+        }
+    }
+}
+
+--5.
+
+(function () {
+    let id = 0;
+    return class Extensible{
+        constructor() {
+            this.id = id++;
+        }
+
+        extend(source) {
+            for (let prop in source) {
+                if (typeof source[prop] === 'function') {
+                    Object.getPrototypeOf(this)[prop] = source[prop]
+                } else {
+                    this[prop] = source[prop]
+                }
+            }
+        };
+    }
+}());
+
+--6.
+
+(function() {
+
+    return class SortedList{
+
+        constructor(){ 
+            this.list = [];
+            this.size = 0;
+        }
+
+        add(element) {
+            (this.size < 1 || element > this.list[this.size - 1]) ?
+                this.list.push(element) :
+                this.list.splice(this.findIndex(element), 0, element);
+            this.size++;
+        }
+        remove(index) {
+            if (index >= 0 && index < this.list.length) {
+                this.list.splice(index, 1);
+                this.size--;
+            }
+        }
+        get(index) {
+            if (index >= 0 && index < this.list.length) {
+                return this.list[index];
+            }
+        }
+        findIndex(element) {
+            let counter = 0;
+            while (element > this.list[counter]) {
+                counter++;
+            }
+            return counter;
+        }
+
+    }
+})();
+
+--7.
+
+class CheckingAccount{
+    constructor(clientId, email, firstName, lastName) {
+        this.clientId = clientId;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.products = [];
+    }
+
+    set clientId(clientId){
+        if (/^[0-9]{6}$/.exec(clientId) === null){
+            throw new TypeError("Client ID must be a 6-digit number");
+        }
+        this._clientId = clientId
+    }
+
+    get clientId(){
+        return this._clientId;
+    }
+
+    set email(email){
+        if (/^[A-Za-z0-9]+@[A-Za-z.]+$/.exec(email) === null){
+            throw new TypeError("Invalid e-mail");
+        }
+        this._email = email
+    }
+
+    get email(){
+        return this._email;
+    }
+
+    set firstName(firstName){
+        if (firstName.length < 3 || firstName.length > 20){
+            throw new TypeError("First name must be between 3 and 20 characters long");
+        }
+        if (/^[A-Za-z]{3,20}$/.exec(firstName) === null){
+            throw new TypeError("First name must contain only Latin characters");
+        }
+        this._firstName = firstName
+    }
+
+    get firstName(){
+        return this._firstName;
+    }
+
+    set lastName(lastName){
+        if (lastName.length < 3 || lastName.length > 20){
+            throw new TypeError("Last name must be between 3 and 20 characters long");
+        }
+        if (/^[A-Za-z]{3,20}$/.exec(lastName) === null){
+            throw new TypeError("Last name must contain only Latin characters");
+        }
+        this._lastName = lastName
+    }
+
+    get lastName(){
+        return this._lastName;
+    }
+}
+
+--8.
+

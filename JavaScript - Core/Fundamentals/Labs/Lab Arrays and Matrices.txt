@@ -1,0 +1,136 @@
+--01. Sum First Last--
+
+function solve(numbers) {
+    let first = Number(numbers[0]);
+    let last = Number(numbers[numbers.length - 1]);
+    console.log(first + last);
+}
+
+--02. Even Position Elements--
+
+function solve(numbers) {
+    let array = [];
+    for (let i = 0; i < numbers.length; i++) {
+        if (i % 2 === 0){
+            array.push(numbers[i]);
+        }
+    }
+    console.log(array.join(" "));
+}
+
+--03. Negative / Positive Numbers--
+
+function solve(numbers) {
+    let array = [];
+    for (let i = 0; i < numbers.length; i++) {
+        if (numbers[i] >= 0){
+            array.push(numbers[i]);
+        }else{
+            array.unshift(numbers[i]);
+        }
+    }
+
+    console.log(array.join(" "));
+}
+
+--04. First and Last K Numbers--
+
+function solve(numbers) {
+    let array = [];
+    let k = numbers.shift(numbers[0]);
+    for (let i = 0; i < k; i++) {
+            array.push(numbers[i]);
+    }
+    console.log(array.join(" "));
+    array = [];
+    for (let i = numbers.length - k; i < numbers.length; i++) {
+        array.push(numbers[i]);
+    }
+    console.log(array.join(" "));
+}
+
+--05. Last K Numbers Sequence--
+
+function solve(n, k) {
+    let numbers = [1];
+    for (let i = 0; i < n - 1; i++) {
+        let currentSum = 0;
+        let index = numbers.length - 1;
+        for (let j = 0; j < k; j++) {
+            if (index < 0){
+                break;
+            }
+            currentSum += numbers[index--];
+        }
+        numbers.push(currentSum);
+    }
+    console.log(numbers.join(" "));
+}
+
+--06. Process Odd Numbers--
+
+function solve(numbers) {
+    let array = [];
+    for (let i = 1; i < numbers.length; i+=2) {
+        array.push(numbers[i])
+    }
+    console.log(array.map(x => x * 2).reverse().toString().replace(",", " "));
+}
+
+--07. Smallest Two Numbers--
+
+function solve(numbers) {
+    console.log(numbers.sort((x, y) => x - y).slice(0, 2).toString().replace(",", " "));
+}
+
+--08. Biggest Element--
+
+function solve(matrix) {
+    let currentMax = - 1000000000;
+    for (let i = 0; i < matrix.length; i++) {
+        let currentNum = matrix[i].sort((x, y) => y - x)[0];
+        if (currentNum > currentMax){
+            currentMax = currentNum;
+        }
+    }
+    console.log(currentMax);
+}
+
+--09. Diagonal Sums--
+
+function solve(matrix) {
+    let diagonalOne = 0;
+    let diagonalTwo = 0;
+    let j = 0;
+    let x = 0;
+    let y = matrix.length - 1;
+    for (let i = 0; i < matrix.length; i++) {
+        diagonalOne += matrix[i][j++];
+        diagonalTwo += matrix[x++][y--];
+    }
+    console.log(diagonalOne + " " + diagonalTwo);
+}
+
+--10. Equal Neighbors--
+
+function solve(matrix) {
+    let counter = 0;
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (i < matrix.length - 1 && matrix[i][j] === matrix[i + 1][j]) {
+                counter++;
+            }
+            if (j < matrix[i].length - 1 && matrix[i][j] === matrix[i][j + 1]) {
+                counter++;
+            }
+            if (i > 0 && matrix[i][j] === matrix[i - 1][j]) {
+                counter++;
+            }
+            if (j > 0 && matrix[i][j] === matrix[i][j - 1]) {
+                counter++;
+            }
+            matrix[i][j] = 0;
+        }
+    }
+    console.log(counter);
+}

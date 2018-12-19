@@ -1,0 +1,154 @@
+--1. Multiply Numbers--
+
+function distance(a, b) {
+    return a*b
+}
+
+--2. Boxes and Bottles--
+
+function distance(bottles, boxes) {
+    return Math.ceil(bottles/boxes)
+}
+
+--3. Leap Year--
+
+function distance(year) {
+    if ((year % 4 === 0 && year % 100 !== 0)|| year % 400 === 0)
+        console.log('yes')
+    else
+        console.log('no')
+}
+
+--4. Circle Area--
+
+function distance(radius) {
+    let area = Math.PI*radius*radius
+    console.log(area)
+    console.log(area.toFixed(2))
+}
+
+--5. Triangle Area--
+
+function distance(a, b, c) {
+    let s = (a + b + c) / 2
+    return Math.sqrt(s * (s - a) * (s - b) * (s - c))
+}
+
+--6. Cone--
+
+function distance(r, h) {
+    let volume = Math.PI * r * r * h / 3
+    console.log('volume = ' + volume)
+    let l = Math.sqrt(r * r + h * h)
+    let surface = Math.PI * r * l + Math.PI * r * r
+    console.log('surface = ' + surface)
+}
+
+--7. Odd / Even--
+
+function distance(number) {
+    if (number % 2 === 0)
+        console.log('even')
+    else if(Math.abs(number % 2) === 1)
+        console.log('odd')
+    else
+        console.log('invalid')
+}
+
+--8. Fruit or Vegetable--
+
+function distance(item) {
+    let fruits = ['banana', 'apple', 'kiwi', 'cherry', 'lemon', 'grapes', 'peach']
+    let vegetables = ['tomato', 'cucumber', 'pepper', 'onion', 'garlic', 'parsley']
+
+    if (fruits.indexOf(item) > -1){
+        console.log('fruit')
+    }
+    else if (vegetables.indexOf(item) > -1){
+        console.log('vegetable')
+    }
+    else {
+        console.log('unknown')
+    }
+}
+
+--9. Colorful Numbers--
+
+function distance(number) {
+    let asString = '<ul>\n'
+    for (var i = 1; i <= number; i++) {
+        if (i % 2 === 0){
+            asString += '<li><span style=\'color:blue\'>' + i + '</span></li>\n'
+        }
+        else {
+            asString += '<li><span style=\'color:green\'>' + i + '</span></li>\n'
+        }
+    }
+    asString += '</ul>'
+    console.log(asString)
+}
+
+--10. Chessboard--
+
+function distance(number) {
+    let asString = '<div class="chessboard">\n'
+    asString += '<div>\n'
+    let innerNumber = number
+    let j = 0
+    for (let i = 0; i < number; i++) {
+        for (; j < innerNumber; j++) {
+            if (j % 2 == 0){
+                asString += '<span class="black"></span>\n'
+            }
+            else{
+                asString += '<span class="white"></span>\n'
+            }
+        }
+        j = i + 1
+        innerNumber++
+        asString += '</div>\n'
+        if (i != number - 1)
+        {
+            asString += '<div>\n'
+        }
+        else{
+            asString += '</div>\n'
+        }
+    }
+    console.log(asString)
+}
+
+--11. Binary Logarithm--
+
+function distance(numbers) {
+    for (var i = 0; i < numbers.length; i++) {
+        let result = Math.log2(numbers[i])
+        console.log(result)
+    }
+}
+
+--12. Prime Number Checker--
+
+function testPrime(num) {
+    var isPrime = true
+    if (num >= 2) {
+        if(num == 2 || num == 3){
+            isPrime = true
+        }
+        else if (num % 2 == 0) {
+            isPrime = false
+        }
+        else {
+            for (i = 3; i <= Math.floor(Math.sqrt(num)); i += 2) {
+                if (num % i == 0) {
+                    isPrime = false;
+                    break
+                }
+            }
+        }
+    }
+    else {
+        isPrime = false;
+    }
+    return isPrime
+}

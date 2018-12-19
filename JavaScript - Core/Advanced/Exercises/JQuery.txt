@@ -1,0 +1,340 @@
+--1.	Increment Counter--
+
+function increment(selector) {
+    let container = $(selector);
+    let fragment = document.createDocumentFragment();
+    let textArea = $("<textarea>");
+    let incrementBtn = $("<button>Increment</button>");
+    let addBtn = $("<button>Add</button>");
+    let list = $("<ul>");
+
+    textArea.val(0);
+    textArea.addClass("counter");
+    textArea.attr('disabled', true);
+
+    incrementBtn.addClass("btn");
+    incrementBtn.attr("id", "incrementBtn");
+
+    addBtn.addClass("btn");
+    addBtn.attr("id", "addBtn");
+
+    list.addClass("results");
+
+    $(incrementBtn).on("click", function(){
+        textArea.val(+textArea.val() + 1);
+    });
+
+    $(addBtn).on("click", function (){
+        let li = $(`<li>${textArea.val()}</li>`);
+        $(list).append(li);
+    });
+
+    $(fragment).append(textArea).append(incrementBtn).append(addBtn).append(list);
+    $(container).append(fragment);
+}
+
+--2.	Timer--
+
+function timer() {
+    let seconds = 0;
+    let currentHours = $("#hours");
+    let currentMinutes = $("#minutes");
+    let currentSeconds = $("#seconds");
+    let startBtn = $("#start-timer");
+    let stopBtn = $("#stop-timer");
+    let timeInterval = null;
+
+    $(startBtn).on("click", function () {
+        if (timeInterval === null){
+            timeInterval = setInterval(changeTime, 1000);
+
+        }
+        function changeTime(){
+            seconds++;
+            currentHours.text(("0" + Math.floor((seconds/60/60))).slice(-2));
+            currentMinutes.text(("0" + Math.floor(((seconds/60)%60))).slice(-2));
+            currentSeconds.text(("0" + (seconds%60)).slice(-2));
+        }
+
+    });
+
+    $(stopBtn).on("click", function () {
+        clearInterval(timeInterval);
+        timeInterval = null;
+    });
+}
+
+--3.	Book Generator--
+
+function createBook(selector, title, author, isbn) {
+    let container = $(selector);
+    let div = $("<div></div>");
+    div.addClass("book1");
+    div.css("border", "medium none");
+
+    let titleParagraph = $("<p></p>");
+    titleParagraph.addClass("title");
+    titleParagraph.text(title);
+
+    let authorParagraph = $("<p>`${author}`</p>");
+    authorParagraph.addClass("author");
+    authorParagraph.text(author);
+
+    let isbnParagraph = $("<p>`${isbn}`</p>");
+    isbnParagraph.addClass("isbn");
+    isbnParagraph.text(isbn);
+
+    let buttonSelect = $("<button>Select</button>");
+    let buttonDeselect = $("<button>Deselect</button>");
+    $(buttonSelect).on("click", function (){
+        div.css("border", "2px solid blue");
+    });
+    $(buttonDeselect).on("click", function (){
+        div.css("border", "");
+    });
+
+    $(div).append(titleParagraph);
+    $(div).append(authorParagraph);
+    $(div).append(isbnParagraph);
+    $(div).append(buttonSelect);
+    $(div).append(buttonDeselect);
+    $(div).appendTo(container);
+
+}
+
+--4.	Form Validation--
+
+function validate() {
+    let checkCompany = $("#company");
+    let companyInfo = $("#companyInfo");
+    let submit = $("#submit");
+    let username = $("#username");
+    let email = $("#email");
+    let password = $("#password");
+    let confirmPassword = $("#confirm-password");
+    let companyNumber = $("#companyNumber");
+    let valid = $("#valid");
+
+    checkCompany.on("change", function () {
+        if (checkCompany.is(":checked") === true) {
+            companyInfo.css("display", "block");
+        } else {
+            companyInfo.css("display", "none");
+        }
+
+    });
+    submit.on("click", validateInputFields);
+
+    function validateInputFields(ev) {
+        ev.preventDefault();
+        let matchUsername = username.val().match(/^[A-Za-z0-9]{3,20}$/);
+        let matchEmail = email.val().match(/.+@.*\./);
+        let matchPassword = password.val().match(/^[A-Za-z_0-9]{5,15}$/);
+        let matchConfirmPassword = confirmPassword.val().match(/^[A-Za-z_0-9]{5,15}$/);
+        let matchSamePasswords = password.val() === confirmPassword.val();
+        let validateCompanyNumber = +companyNumber.val() >= 1000 && +companyNumber.val() < 10000;
+
+        if (matchSamePasswords === false) {
+            confirmPassword.css("border-color", "red");
+            password.css("border-color", "red");
+        } else {
+            validateField(confirmPassword, matchConfirmPassword);
+            validateField(password, matchPassword);
+        }
+
+        if (validateCompanyNumber === false && checkCompany.is(":checked")) {
+            companyNumber.css("border-color", "red")
+        } else {
+            companyNumber.css("border-color", "")
+        }
+
+        validateField(username, matchUsername);
+        validateField(email, matchEmail);
+
+        if (matchUsername !== null && matchEmail !== null && matchConfirmPassword !== null && matchPassword !== null &&
+            matchSamePasswords) {
+            if (checkCompany.is(":checked")) {
+                if (validateCompanyNumber) {
+                    valid.css("display", "block");
+                } else {
+                    valid.css("display", "none");
+                }
+            } else {
+                valid.css("display", "block");
+            }
+        } else {
+            valid.css("display", "none");
+        }
+
+        function validateField(item, match) {
+            if (match === null) {
+                item.css("border-color", "red");
+            } else {
+                item.css("border-color", "");
+            }
+        }
+    }
+}
+
+--5.	DOM Search--
+
+function domSearch(selector, caseSensitive) {
+    let container = $(selector);
+    let divAdd = $("<div>");
+    divAdd.addClass("add-controls");
+    let labelAdd = $("<label>Enter text:</label>");
+    let input = $("<input>");
+    $(labelAdd).append(input);
+    let anchor = $("<a>Add</a>");
+    anchor.addClass("button");
+    anchor.css("display", "inline-block");
+    $(divAdd).append(labelAdd);
+    $(divAdd).append(anchor);
+    $(container).append(divAdd);
+
+    let divSearch = $("<div>");
+    divSearch.addClass("search-controls");
+    let labelSearch = $("<label>Search:</label>");
+    let searchInput = $("<input>");
+    labelSearch.append(searchInput);
+    $(divSearch).append(labelSearch);
+    $(container).append(divSearch);
+
+    let list = $("<ul>");
+    list.addClass("items-list");
+
+    anchor.on("click", function () {
+        if (input.val() !== ""){
+            let anchorX = $("<a>X</a>");
+            anchorX.addClass("button");
+            let listElement = $("<li>");
+            listElement.addClass("list-item");
+            listElement.text(input.val());
+            listElement.wrapInner( "<strong></strong>" );
+            $(listElement).prepend(anchorX);
+            $(list).append(listElement);
+            anchorX.on("click", function () {
+                listElement.remove();
+            });
+        }
+    });
+
+    labelSearch.on("input", function () {
+        let text = $(searchInput).val();
+        $("ul li").each(function (index, element) {
+            if (caseSensitive){
+                if (!element.textContent.includes(text)){
+                    $(element).css('display', 'none');
+                }else{
+                    $(element).css('display', 'block');
+                }
+            }else{
+                if (!element.textContent.toLowerCase().includes(text.toLowerCase())){
+                    $(element).css('display', 'none');
+                }else{
+                    $(element).css('display', 'block');
+                }
+            }
+        });
+    });
+
+    let divResult = $("<div>");
+    divResult.addClass("result-controls");
+    $(divSearch).append(labelSearch);
+    $(divResult).append(list);
+    $(container).append(divSearch);
+    $(container).append(divResult);
+}
+
+--6.	06. Calendar--
+
+function calendar(arr) {
+    let [day, month, year] = arr;
+    let date = new Date();
+    date.setFullYear(year);
+    date.setMonth(month - 1);
+    date.setDate(1);
+    let firstDayOfTheMonth = date.getDay() === 0 ? 7 : date.getDay();
+    let numberOfDaysInMonth = new Date(year, month, 0).getDate();
+    let dayCounter = 1;
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    let days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+    let selector = $('#content');
+
+    let table = $('<table>');
+    selector.append(table);
+    let caption = $('<caption>');
+
+    table.css('font-size', '40px');
+    table.css('text-align', 'center');
+    caption.text(`${months[month - 1]} ${year}`);
+    table.append(caption);
+
+    let tableBody = $('<tbody>');
+    table.append(tableBody);
+    let tableRowHeading = $('<tr>');
+    days.forEach(x => tableRowHeading.append($('<th>').text(x)));
+    table.append(tableRowHeading);
+    let firstWeekCounter = 1;
+    while (true) {
+        let currentWeek = $('<tr>');
+        for (let i = 1; i <= 7; i++) {
+            let tableColumn = $('<td>');
+            if (firstWeekCounter++ < firstDayOfTheMonth || dayCounter > numberOfDaysInMonth) {
+                tableColumn.text("");
+            } else {
+                if (dayCounter === day) {
+                    tableColumn.addClass("today");
+                }
+                tableColumn.text(dayCounter);
+                dayCounter++;
+            }
+            currentWeek.append(tableColumn);
+        }
+        table.append(currentWeek);
+        if (dayCounter > numberOfDaysInMonth) {
+            break;
+        }
+    }
+}
+
+--7.	Wiki Parser--
+
+function wikiParser(selector) {
+    let container = $(selector);
+    let textToParse = container.text();
+
+    parseTags(/===([^===]+)===/, "<h3>", "</h3>");
+    parseTags(/==([^==]+)==/, "<h2>", "</h2>");
+    parseTags(/=([^=]+)=/, "<h1>", "</h1>");
+    parseTags(/'''([^''']+)'''/, "<b>", "</b>");
+    parseTags(/''([^'']+)''/, "<i>", "</i>");
+
+    let regex = /\[\[([\w\s\d|]*)]]/;
+
+    while (true) {
+        let match = regex.exec(textToParse);
+        if (match === null){
+            break;
+        }
+        if (match[1].includes("|")){
+            textToParse = textToParse.replace(match[0], `<a href="/wiki/${match[1].split("|")[0]}">${match[1].split("|")[1]}</a>`);
+        }else{
+            textToParse = textToParse.replace(match[0], `<a href="/wiki/${match[1]}">${match[1]}</a>`);
+        }
+
+    }
+
+    function parseTags(regex, tag1, tag2) {
+        while (true) {
+            let match = regex.exec(textToParse);
+            if (match === null){
+                break;
+            }
+            textToParse = textToParse.replace(match[0], tag1 + match[1] + tag2)
+        }
+    }
+    container.html(textToParse);
+
+}

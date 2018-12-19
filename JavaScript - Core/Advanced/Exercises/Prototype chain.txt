@@ -1,0 +1,237 @@
+--1.
+
+function solve() {
+
+    class Balloon {
+        constructor(color, gasWeight) {
+            this.color = color;
+            this.gasWeight = gasWeight;
+        }
+    }
+
+    class PartyBalloon extends Balloon{
+        constructor(color, gasWeight, ribbonColor, ribbonLength) {
+            super(color, gasWeight);
+            this.ribbon = {
+                color : ribbonColor,
+                length : ribbonLength
+            }
+        }
+
+        get ribbon(){
+            return this._ribbon;
+        }
+
+        set ribbon(ribbon){
+            this._ribbon = ribbon;
+        }
+    }
+
+    class BirthdayBalloon extends PartyBalloon{
+        constructor(color, gasWeight, ribbonColor, ribbonLength, text){
+            super(color, gasWeight, ribbonColor, ribbonLength);
+            this.text = text;
+
+        }
+
+        get text(){
+            return this._text;
+        }
+
+        set text(text){
+            this._text = text;
+        }
+    }
+
+    return {
+        Balloon : Balloon,
+        PartyBalloon : PartyBalloon,
+        BirthdayBalloon : BirthdayBalloon
+    }
+}
+
+--2.
+
+function createPeopleClasses() {
+    class Employee {
+        constructor(name, age) {
+            if (new.target === Employee) {
+                throw new Error('Employee class cannot be instantiated.')
+            }
+
+            this.name = name;
+            this.age = age;
+            this.salary = 0;
+            this.tasks = [];
+        }
+
+        work() {
+            let currentTask = this.tasks.shift();
+            console.log(`${this.name} ${currentTask}`);
+            this.tasks.push(currentTask);
+        }
+
+        collectSalary() {
+            console.log(`${this.name} received ${this._calculateSalary()} this month.`);
+        }
+
+        _calculateSalary() {
+            return this.salary;
+        }
+    }
+
+    class Junior extends Employee {
+        constructor(name, age) {
+            super(name, age);
+
+            this.tasks.push('is working on a simple task.');
+        }
+    }
+
+    class Senior extends Employee {
+        constructor(name, age) {
+            super(name, age);
+
+            this.tasks.push('is working on a complicated task.');
+            this.tasks.push('is taking time off work.');
+            this.tasks.push('is supervising junior workers.');
+        }
+    }
+
+    class Manager extends Employee {
+        constructor(name, age) {
+            super(name, age);
+            this.dividend = 0;
+
+            this.tasks.push('scheduled a meeting.');
+            this.tasks.push('is preparing a quarterly report.');
+        }
+
+        _calculateSalary() {
+            return this.salary + this.dividend;
+        }
+    }
+
+    return {Employee, Junior, Senior, Manager};
+}
+
+--3.
+
+function solve() {
+    class Post {
+        constructor(title, content) {
+            this.title = title;
+            this.content = content;
+        }
+
+        toString(){
+            return `Post: ${this.title}\nContent: ${this.content}`;
+        }
+    }
+
+    class SocialMediaPost extends Post{
+        constructor(title, content, likes, dislikes) {
+            super(title, content);
+            this.likes = +likes;
+            this.dislikes = +dislikes;
+            this.comments  = [];
+        }
+
+        addComment(comment){
+            this.comments.push(comment);
+        }
+
+        toString(){
+            let result = super.toString() + `\nRating: ${this.likes - this.dislikes}`;
+            if (this.comments.length > 0){
+                result += "\nComments:";
+                for (const comment of this.comments) {
+                    result += `\n * ${comment}`
+                }
+            }
+            return result;
+        }
+    }
+
+    class BlogPost extends Post{
+        constructor(title, content, views) {
+            super(title, content);
+            this.views = views;
+        }
+
+        view(){
+            this.views++;
+            return this;
+        }
+
+        toString(){
+            return super.toString() + `\nViews: ${this.views}`
+        }
+    }
+    return {Post, SocialMediaPost, BlogPost};
+}
+
+--4.
+
+function solve() {
+    class Melon {
+        constructor(weight, melonSort ) {
+            if (new.target === Melon) {
+                throw new TypeError("Abstract class cannot be instantiated directly");
+            }
+            this.weight = +weight;
+            this.melonSort = melonSort;
+            this._elementIndex = this.weight * this.melonSort.length
+            this.element = '';
+        }
+
+        get elementIndex(){
+            return this._elementIndex;
+        }
+
+        toString(){
+            return `Element: ${this.element}\nSort: ${this.melonSort}\nElement Index: ${this.elementIndex}`
+        }
+    }
+
+    class Watermelon extends Melon{
+        constructor(weight, melonSort){
+            super(weight, melonSort);
+            this.element = 'Water';
+        }
+    }
+
+    class Firemelon extends Melon{
+        constructor(weight, melonSort){
+            super(weight, melonSort);
+            this.element = 'Fire';
+        }
+    }
+
+    class Earthmelon extends Melon{
+        constructor(weight, melonSort){
+            super(weight, melonSort);
+            this.element = 'Earth';
+        }
+    }
+
+    class Airmelon extends Melon{
+        constructor(weight, melonSort) {
+            super(weight, melonSort);
+            this.element = 'Air';
+        }
+    }
+
+    class Melolemonmelon extends Watermelon{
+        constructor(weight, melonSort) {
+            super(weight, melonSort);
+            this.elements = ['Fire', 'Earth', 'Air', 'Water'];
+        }
+        morph(){
+            let currentElement = this.elements.shift();
+            this.element = currentElement;
+            this.elements.push(currentElement);
+        }
+    }
+    return {Melon, Watermelon, Firemelon, Earthmelon, Airmelon, Melolemonmelon}
+}

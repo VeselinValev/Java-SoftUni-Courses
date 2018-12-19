@@ -1,0 +1,99 @@
+--1.	Split a String with a Delimiter--
+
+function problem1(text, delimiter) {
+    let array = text.split(delimiter)
+    console.log(array.join('\n'))
+}
+
+--02. Repeat a String N Times--
+
+function problem1(text, repetition) {
+    console.log(text.repeat(repetition))
+}
+
+--03. Starts With--
+
+function problem1(text, startsWith) {
+    console.log(text.startsWith(startsWith))
+}
+
+--04. Ends With--
+
+function problem1(text, endsWith) {
+    console.log(text.endsWith(endsWith))
+}
+
+--05. Capitalize the Words--
+
+function problem1(text) {
+    let array = text.toLowerCase().split(' ').map(x => x.trim())
+    let result = []
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].charCodeAt(0) >= 97 && array[i].charCodeAt(0) <= 122){
+            let char = array[i].charCodeAt(0) - 32
+            let word = String.fromCharCode(char) + array[i].substr(1)
+            result.push(word)
+        }
+        else{
+            result.push(array[i])
+        }
+    }
+    console.log(result.join(' '))
+}
+
+--06. Capture the Numbers--
+
+function problem1(text) {
+    let regex = /\d+/g
+    let result = []
+    for (let i = 0; i < text.length; i++) {
+        let matches = text[i].match(regex)
+        result.push.apply(result, matches)
+    }
+    console.log(result.join(' '))
+}
+
+--07. Find Variable Names in Sentences--
+
+function problem1(text) {
+    let regex = /\b_([A-Za-z0-9]+)\b/g
+    let result = []
+    while (match = regex.exec(text)){
+        result.push(match[1])
+    }
+    console.log(result.join(','))
+}
+
+--08. Word Occurences--
+
+function problem1(text, word) {
+    let regex = new RegExp('\\b'+word+'\\b', 'gi')
+    matches = text.match(regex)
+    if(matches){
+        console.log(matches.length)
+    }
+    else{
+        console.log(0)
+    }
+}
+
+--09. Extract Links--
+
+function problem1(text) {
+    let regex = /www\.[A-Za-z\d-]+(\.[a-z]+)+/g
+    for (let i = 0; i < text.length; i++) {
+        matches = text[i].match(regex)
+        if(matches){
+            console.log(matches.join('\n'))
+        }
+    }
+}
+
+--10. Secret Data--
+
+function problem1(text) {
+    text.forEach(l => console.log(l
+        .replace(
+            /(\*[A-Z][a-zA-Z]*)(?=\s+|$)|(\+[0-9-]{10})(?=\s+|$)|(![0-9a-zA-Z]+)(?=\s+|$)|(_[0-9a-zA-Z]+)(?=\s+|$)/g,
+            (m) => '|'.repeat(m.length))))
+}

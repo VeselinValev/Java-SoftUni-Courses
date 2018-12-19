@@ -1,0 +1,114 @@
+--1.	Subtraction--
+
+function subtract() {
+        let numberOne = Number(document.getElementById('firstNumber').value)
+        let numberTwo = Number(document.getElementById('secondNumber').value)
+        let result = numberOne - numberTwo
+        document.getElementById('result').textContent = result
+    }
+
+--2.	Fill Dropdown--
+
+function addItem() {
+    let text = document.getElementById('newItemText').value
+    let value = document.getElementById('newItemValue').value
+    let menu = document.getElementById('menu')
+
+    let option = document.createElement('option')
+    option.value = value
+    option.text = text
+    menu.appendChild(option)
+    document.getElementById('newItemText').value = ''
+    document.getElementById('newItemValue').value = ''
+}
+
+--3.	Accordion--
+
+function toggle() {
+        let moreOrLess = document.querySelector('.button')
+        if(moreOrLess.textContent === 'More'){
+            document.getElementById('extra').style.display = 'block'
+            moreOrLess.textContent = 'Less'
+        }
+        else{
+            document.getElementById('extra').style.display = 'none'
+            moreOrLess.textContent = 'More'
+        }
+    }
+
+--04. Sections--
+
+function create(sentences) {
+        for (let obj of sentences) {
+            let div = document.createElement('div')
+            let paragraph = document.createElement('p')
+            paragraph.style.display = 'none'
+            paragraph.textContent = obj
+            div.appendChild(paragraph)
+            div.addEventListener('click', function () {
+                paragraph.style.display = 'block'
+            })
+            document.getElementById('content').appendChild(div)
+        }
+    }
+
+--05. Notification--
+
+function notify(message) {
+        let divNote = document.getElementById('notification')
+        divNote.textContent = message
+        divNote.style.display = 'block'
+        setTimeout(function () {
+            divNote.style.display = 'none'
+        }, 2000)
+    }
+
+--06. Time Converter--
+
+function attachEventsListeners() {
+    let days = document.getElementById('daysBtn')
+    let hours = document.getElementById('hoursBtn')
+    let minutes = document.getElementById('minutesBtn')
+    let seconds = document.getElementById('secondsBtn')
+    let daysValue = document.getElementById('days')
+    let hoursValue = document.getElementById('hours')
+    let minutesValue = document.getElementById('minutes')
+    let secondsValue = document.getElementById('seconds')
+    days.addEventListener('click', function () {
+        hoursValue.value = daysValue.value * 24
+        minutesValue.value = daysValue.value * 24 * 60
+        secondsValue.value = daysValue.value * 24 * 60 * 60
+    })
+    hours.addEventListener('click', function () {
+        daysValue.value = hoursValue.value / 24
+        minutesValue.value = hoursValue.value * 60
+        secondsValue.value = hoursValue.value * 60 * 60
+    })
+    minutes.addEventListener('click', function () {
+        hoursValue.value = minutesValue.value / 60
+        daysValue.value = minutesValue.value / 60 / 24
+        secondsValue.value = minutesValue.value * 60
+    })
+    seconds.addEventListener('click', function () {
+        hoursValue.value = secondsValue.value / 60 / 60
+        minutesValue.value = secondsValue.value / 60
+        daysValue.value = secondsValue.value / 24 / 60 / 60
+    })
+}
+
+--07. Distance Converter--
+
+function attachEventsListeners() {
+        let conversionRates = new Map([["m", 1], ["km", 1000], ["cm", 0.01], ["mm", 0.001], ["mi", 1609.34],
+            ["yrd", 0.9144], ["ft", 0.3048], ["in", 0.0254]]);
+        let eventListenerConvert = document.getElementById("convert");
+        eventListenerConvert.addEventListener("click", convertDistance);
+        function convertDistance(){
+            let inputType = document.getElementById("inputUnits").value;
+            let outputType = document.getElementById("outputUnits").value;
+            let inputValue = document.getElementById("inputDistance");
+            let outputValue = document.getElementById("outputDistance");
+            outputValue.disabled = false;
+            outputValue.value = conversionRates.get(inputType) / conversionRates.get(outputType) * inputValue.value;
+        }
+    }
